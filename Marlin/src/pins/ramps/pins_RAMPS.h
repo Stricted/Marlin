@@ -494,7 +494,7 @@
 
     #if ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER)
 
-      #define BEEPER_PIN        37
+      #define BEEPER_PIN        -1 // the beeper is annoying as fuck
 
       #if ENABLED(CR10_STOCKDISPLAY)
         #define BTN_EN1         17
