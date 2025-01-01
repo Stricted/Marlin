@@ -90,9 +90,15 @@
 #define E0_STEP_PIN                         PD6
 #define E0_DIR_PIN                          PD3
 
-#define E1_ENABLE_PIN                       PA3
-#define E1_STEP_PIN                         PD15
-#define E1_DIR_PIN                          PA1
+#ifdef USE_E1_AS_Z2
+  #define Z2_ENABLE_PIN                       PA3
+  #define Z2_STEP_PIN                         PD15
+  #define Z2_DIR_PIN                          PA1
+#else
+  #define E1_ENABLE_PIN                       PA3
+  #define E1_STEP_PIN                         PD15
+  #define E1_DIR_PIN                          PA1
+#endif
 
 #if HAS_TMC_UART
   //
@@ -103,7 +109,11 @@
   #define Y_SERIAL_TX_PIN                   PD7
   #define Z_SERIAL_TX_PIN                   PD4
   #define E0_SERIAL_TX_PIN                  PD9
-  #define E1_SERIAL_TX_PIN                  PD8
+  #ifdef USE_E1_AS_Z2
+    #define Z2_SERIAL_TX_PIN                  PD8
+  #else
+    #define E1_SERIAL_TX_PIN                  PD8
+  #endif
 
   // Reduce baud rate to improve software serial reliability
   #ifndef TMC_BAUD_RATE

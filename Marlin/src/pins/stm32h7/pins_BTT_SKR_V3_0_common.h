@@ -63,7 +63,11 @@
 #define Y_DIAG_PIN                          PC3   // Y-STOP
 #define Z_DIAG_PIN                          PC0   // Z-STOP
 #define E0_DIAG_PIN                         PC2   // E0DET
+#ifdef USE_E1_AS_Z2
+#define Z2_DIAG_PIN                         PA0   // E1DET
+#else
 #define E1_DIAG_PIN                         PA0   // E1DET
+#endif
 
 //
 // Limit Switches
@@ -196,6 +200,20 @@
   #define E0_CS_PIN                         PC6
 #endif
 
+#ifdef USE_E1_AS_Z2
+#ifndef Z2_STEP_PIN
+  #define Z2_STEP_PIN                       PD11
+#endif
+#ifndef Z2_DIR_PIN
+  #define Z2_DIR_PIN                        PD10
+#endif
+#ifndef Z2_ENABLE_PIN
+  #define Z2_ENABLE_PIN                     PD13
+#endif
+#ifndef Z2_CS_PIN
+  #define Z2_CS_PIN                         PD12
+#endif
+#else
 #ifndef E1_STEP_PIN
   #define E1_STEP_PIN                       PD11
 #endif
@@ -207,6 +225,7 @@
 #endif
 #ifndef E1_CS_PIN
   #define E1_CS_PIN                         PD12
+#endif
 #endif
 
 //
@@ -233,6 +252,12 @@
 //
 // Heaters / Fans
 //
+#ifdef REMAP_HEATER_PINS
+  #define HEATER_0_PIN                      PB6   // Heater0 (Fan1)
+  #define HEATER_1_PIN                      PB4   // Heater1
+  #define HEATER_BED_PIN                    PB5   // Hotbed (Fan2)
+  #define FAN0_PIN                          PB7   // Fan0
+#else
 #ifndef HEATER_0_PIN
   #define HEATER_0_PIN                      PB3   // Heater0
 #endif
@@ -261,7 +286,7 @@
     #define FAN2_PIN                        PB5   // Fan2
   #endif
 #endif // SPINDLE_FEATURE || LASER_FEATURE
-
+#endif
 //
 // SPI pins for TMC2130 stepper drivers
 //
@@ -301,8 +326,11 @@
   #define Y_SERIAL_TX_PIN                   PD0
   #define Z_SERIAL_TX_PIN                   PE1
   #define E0_SERIAL_TX_PIN                  PC6
-  #define E1_SERIAL_TX_PIN                  PD12
-
+  #ifdef USE_E1_AS_Z2
+    #define Z2_SERIAL_TX_PIN                  PD12
+  #else
+    #define E1_SERIAL_TX_PIN                  PD12
+  #endif
   // Reduce baud rate to improve software serial reliability
   #ifndef TMC_BAUD_RATE
     #define TMC_BAUD_RATE                  19200
@@ -532,7 +560,6 @@
       #endif
 
     #elif ENABLED(MKS_TS35_V2_0)
-
       /**                      ------                                   ------
        *               BEEPER | 1  2 | BTN_ENC               SPI1_MISO | 1  2 | SPI1_SCK
        *     TFT_BKL / LCD_EN | 3  4 | TFT_RESET / LCD_RS      BTN_EN1 | 3  4 | SPI1_CS
